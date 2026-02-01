@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Thu thập thông tin hệ thống tệp tin Windows
+    Thu thập thông tin các port mạng đang listening trên Windows
 
 .DESCRIPTION
-    Thu thập thông tin về các ổ đĩa logic
+    Thu thập thông tin về các port TCP đang listening
 #>
 
 # Nhập các module cần thiết
@@ -35,23 +35,28 @@ if (Get-Command Write-PatchData -ErrorAction SilentlyContinue) {
     }
 }
 
-# Thu thập thông tin hệ thống tệp tin
-$disks = Get-WmiObject Win32_LogicalDisk | Select-Object DeviceID, FileSystem, Size, FreeSpace
+# Thu thập thông tin port listening
+$tcpConnections = Get-NetTCPConnection -State Listen -ErrorAction SilentlyContinue
+$udpEndpoints = Get-NetUDPEndpoint -ErrorAction SilentlyContinue
 
-# Tạo mảng filesystems
-$filesystems = @()
-foreach ($disk in $disks) {
-    $used = $disk.Size - $disk.FreeSpace
-    $usePercent = if ($disk.Size -gt 0) { [math]::Round(($used / $disk.Size) * 100, 1) } else { 0 }
+# Parse TCP connections
+$listeningPorts = @()
+foreach ($conn in $tcpConnections) {
+    $listeningPorts += @{
+        protocol = "TCP"
+        local_address = $conn.LocalAddress
+        local_port = $conn.LocalPort
+        state = "LISTENING"
+    }
+}
 
-    $filesystems += @{
-        device_id = $disk.DeviceID
-        filesystem = $disk.FileSystem
-        size = $disk.Size
-        free_space = $disk.FreeSpace
-        mount_point = $disk.DeviceID
-        used = $used
-        use_percent = "$usePercent%"
+# Parse UDP endpoints
+foreach ($udp in $udpEndpoints) {
+    $listeningPorts += @{
+        protocol = "UDP"
+        local_address = $udp.LocalAddress
+        local_port = $udp.LocalPort
+        state = "LISTENING"
     }
 }
 
@@ -61,7 +66,7 @@ $result = @{
     data = @{
         hostname = $env:COMPUTERNAME
         timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        filesystems = $filesystems
+        network_ports = $listeningPorts
     }
 }
 

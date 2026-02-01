@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Thu thập thông tin hệ thống tệp tin Windows
+    Thu thập thông tin Video/Graphics trên Windows
 
 .DESCRIPTION
-    Thu thập thông tin về các ổ đĩa logic
+    Thu thập thông tin về video controllers và graphics trên hệ thống
 #>
 
 # Nhập các module cần thiết
@@ -35,23 +35,25 @@ if (Get-Command Write-PatchData -ErrorAction SilentlyContinue) {
     }
 }
 
-# Thu thập thông tin hệ thống tệp tin
-$disks = Get-WmiObject Win32_LogicalDisk | Select-Object DeviceID, FileSystem, Size, FreeSpace
+# Thu thập thông tin video controllers
+$videoControllers = @()
+$videoCards = Get-WmiObject Win32_VideoController -ErrorAction SilentlyContinue
 
-# Tạo mảng filesystems
-$filesystems = @()
-foreach ($disk in $disks) {
-    $used = $disk.Size - $disk.FreeSpace
-    $usePercent = if ($disk.Size -gt 0) { [math]::Round(($used / $disk.Size) * 100, 1) } else { 0 }
-
-    $filesystems += @{
-        device_id = $disk.DeviceID
-        filesystem = $disk.FileSystem
-        size = $disk.Size
-        free_space = $disk.FreeSpace
-        mount_point = $disk.DeviceID
-        used = $used
-        use_percent = "$usePercent%"
+foreach ($card in $videoCards) {
+    $videoControllers += [ordered]@{
+        name = $card.Name
+        device_id = $card.DeviceID
+        adapter_ram_mb = [math]::Round($card.AdapterRAM / 1MB, 0)
+        driver_version = $card.DriverVersion
+        driver_date = $card.DriverDate
+        video_mode_description = $card.VideoModeDescription
+        current_horizontal_resolution = $card.CurrentHorizontalResolution
+        current_vertical_resolution = $card.CurrentVerticalResolution
+        current_refresh_rate = $card.CurrentRefreshRate
+        current_bits_per_pixel = $card.CurrentBitsPerPixel
+        manufacturer = $card.Manufacturer
+        video_processor = $card.VideoProcessor
+        status = $card.Status
     }
 }
 
@@ -61,7 +63,7 @@ $result = @{
     data = @{
         hostname = $env:COMPUTERNAME
         timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        filesystems = $filesystems
+        video_graphics = $videoControllers
     }
 }
 

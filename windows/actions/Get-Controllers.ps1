@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Thu thập thông tin hệ thống tệp tin Windows
+    Thu thập thông tin Controllers trên Windows
 
 .DESCRIPTION
-    Thu thập thông tin về các ổ đĩa logic
+    Thu thập thông tin về các controller và device trên hệ thống
 #>
 
 # Nhập các module cần thiết
@@ -35,23 +35,27 @@ if (Get-Command Write-PatchData -ErrorAction SilentlyContinue) {
     }
 }
 
-# Thu thập thông tin hệ thống tệp tin
-$disks = Get-WmiObject Win32_LogicalDisk | Select-Object DeviceID, FileSystem, Size, FreeSpace
+# Thu thập thông tin controllers
+$controllers = @()
+$pnpEntities = Get-WmiObject Win32_PnPEntity -ErrorAction SilentlyContinue | Where-Object {
+    $_.Name -and (
+        $_.Name -match "controller|Controller|CONTROLLER" -or
+        $_.PNPClass -match "controller|Controller|CONTROLLER" -or
+        $_.PNPClass -eq "USB" -or
+        $_.PNPClass -eq "PCI" -or
+        $_.PNPClass -eq "HDC" -or
+        $_.PNPClass -eq "SCSIAdapter"
+    )
+}
 
-# Tạo mảng filesystems
-$filesystems = @()
-foreach ($disk in $disks) {
-    $used = $disk.Size - $disk.FreeSpace
-    $usePercent = if ($disk.Size -gt 0) { [math]::Round(($used / $disk.Size) * 100, 1) } else { 0 }
-
-    $filesystems += @{
-        device_id = $disk.DeviceID
-        filesystem = $disk.FileSystem
-        size = $disk.Size
-        free_space = $disk.FreeSpace
-        mount_point = $disk.DeviceID
-        used = $used
-        use_percent = "$usePercent%"
+foreach ($entity in $pnpEntities) {
+    $controllers += [ordered]@{
+        name = $entity.Name
+        device_id = $entity.DeviceID
+        pnp_class = $entity.PNPClass
+        manufacturer = $entity.Manufacturer
+        status = $entity.Status
+        description = $entity.Description
     }
 }
 
@@ -61,7 +65,7 @@ $result = @{
     data = @{
         hostname = $env:COMPUTERNAME
         timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        filesystems = $filesystems
+        controllers = $controllers
     }
 }
 

@@ -41,11 +41,8 @@ result=$(cat <<EOF
       "os_name": "$os_name",
       "os_version": "$os_version",
       "os_manufacturer": "$os_manufacturer",
-      "architecture": "$architecture",
-      "kernel_version": "$kernel_version",
-      "os_release": "$os_release",
-      "lsb_release": "$lsb_release_output",
-      "uname": "$uname_output"
+      "system_type": "$architecture",
+      "build_number": "$kernel_version"
     }
   }
 }

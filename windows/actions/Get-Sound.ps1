@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Thu thập thông tin hệ thống tệp tin Windows
+    Thu thập thông tin Sound/Audio trên Windows
 
 .DESCRIPTION
-    Thu thập thông tin về các ổ đĩa logic
+    Thu thập thông tin về sound devices và audio trên hệ thống
 #>
 
 # Nhập các module cần thiết
@@ -35,23 +35,23 @@ if (Get-Command Write-PatchData -ErrorAction SilentlyContinue) {
     }
 }
 
-# Thu thập thông tin hệ thống tệp tin
-$disks = Get-WmiObject Win32_LogicalDisk | Select-Object DeviceID, FileSystem, Size, FreeSpace
+# Thu thập thông tin sound devices
+$soundDevices = @()
+$soundCards = Get-WmiObject Win32_SoundDevice -ErrorAction SilentlyContinue
 
-# Tạo mảng filesystems
-$filesystems = @()
-foreach ($disk in $disks) {
-    $used = $disk.Size - $disk.FreeSpace
-    $usePercent = if ($disk.Size -gt 0) { [math]::Round(($used / $disk.Size) * 100, 1) } else { 0 }
-
-    $filesystems += @{
-        device_id = $disk.DeviceID
-        filesystem = $disk.FileSystem
-        size = $disk.Size
-        free_space = $disk.FreeSpace
-        mount_point = $disk.DeviceID
-        used = $used
-        use_percent = "$usePercent%"
+foreach ($device in $soundCards) {
+    $soundDevices += [ordered]@{
+        name = $device.Name
+        device_id = $device.DeviceID
+        manufacturer = $device.Manufacturer
+        product_name = $device.ProductName
+        status = $device.Status
+        status_info = $device.StatusInfo
+        pnp_device_id = $device.PNPDeviceID
+        hardware_id = $device.HardwareID
+        driver_provider_name = $device.DriverProviderName
+        driver_version = $device.DriverVersion
+        driver_date = $device.DriverDate
     }
 }
 
@@ -61,7 +61,7 @@ $result = @{
     data = @{
         hostname = $env:COMPUTERNAME
         timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        filesystems = $filesystems
+        sound_audio = $soundDevices
     }
 }
 

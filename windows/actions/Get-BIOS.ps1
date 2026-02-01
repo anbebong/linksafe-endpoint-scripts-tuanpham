@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Thu thập thông tin hệ thống tệp tin Windows
+    Thu thập thông tin BIOS trên Windows
 
 .DESCRIPTION
-    Thu thập thông tin về các ổ đĩa logic
+    Thu thập thông tin về BIOS hệ thống
 #>
 
 # Nhập các module cần thiết
@@ -35,25 +35,8 @@ if (Get-Command Write-PatchData -ErrorAction SilentlyContinue) {
     }
 }
 
-# Thu thập thông tin hệ thống tệp tin
-$disks = Get-WmiObject Win32_LogicalDisk | Select-Object DeviceID, FileSystem, Size, FreeSpace
-
-# Tạo mảng filesystems
-$filesystems = @()
-foreach ($disk in $disks) {
-    $used = $disk.Size - $disk.FreeSpace
-    $usePercent = if ($disk.Size -gt 0) { [math]::Round(($used / $disk.Size) * 100, 1) } else { 0 }
-
-    $filesystems += @{
-        device_id = $disk.DeviceID
-        filesystem = $disk.FileSystem
-        size = $disk.Size
-        free_space = $disk.FreeSpace
-        mount_point = $disk.DeviceID
-        used = $used
-        use_percent = "$usePercent%"
-    }
-}
+# Thu thập thông tin BIOS
+$biosInfo = Get-WmiObject Win32_BIOS
 
 # Tạo kết quả JSON
 $result = @{
@@ -61,7 +44,14 @@ $result = @{
     data = @{
         hostname = $env:COMPUTERNAME
         timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        filesystems = $filesystems
+        bios = @{
+            manufacturer = $biosInfo.Manufacturer
+            version = $biosInfo.Version
+            serial_number = $biosInfo.SerialNumber
+            release_date = $biosInfo.ReleaseDate
+            bios_version = $biosInfo.BIOSVersion
+            smbios_version = $biosInfo.SMBIOSBIOSVersion
+        }
     }
 }
 

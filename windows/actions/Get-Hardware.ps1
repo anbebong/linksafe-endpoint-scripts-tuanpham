@@ -1,10 +1,10 @@
 #Requires -Version 5.1
 <#
 .SYNOPSIS
-    Thu thập thông tin bảng định tuyến Windows
+    Thu thập thông tin phần cứng Windows
 
 .DESCRIPTION
-    Thu thập thông tin bảng định tuyến
+    Thu thập thông tin về hệ thống máy tính và bo mạch chủ
 #>
 
 # Nhập các module cần thiết
@@ -35,9 +35,9 @@ if (Get-Command Write-PatchData -ErrorAction SilentlyContinue) {
     }
 }
 
-# Thu thập thông tin bảng định tuyến
-$routePrint = route print
-$netRoute = Get-NetRoute
+# Thu thập thông tin phần cứng
+$computerSystem = Get-WmiObject Win32_ComputerSystem
+$baseBoard = Get-WmiObject Win32_BaseBoard
 
 # Tạo kết quả JSON
 $result = @{
@@ -45,9 +45,21 @@ $result = @{
     data = @{
         hostname = $env:COMPUTERNAME
         timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
-        routing_table = @{
-            route = $routePrint -join "`n"
-            net_route = $netRoute | ConvertTo-Json -Compress
+        hardware = @{
+            computer_system = @{
+                name = $computerSystem.Name
+                manufacturer = $computerSystem.Manufacturer
+                model = $computerSystem.Model
+                total_physical_memory = $computerSystem.TotalPhysicalMemory
+                number_of_processors = $computerSystem.NumberOfProcessors
+                number_of_logical_processors = $computerSystem.NumberOfLogicalProcessors
+            }
+            base_board = @{
+                manufacturer = $baseBoard.Manufacturer
+                product = $baseBoard.Product
+                version = $baseBoard.Version
+                serial_number = $baseBoard.SerialNumber
+            }
         }
     }
 }
