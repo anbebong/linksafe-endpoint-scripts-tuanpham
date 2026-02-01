@@ -1,0 +1,27 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    Pre-reboot hook: Drain connections
+
+.DESCRIPTION
+    Gracefully drain connections before reboot
+    Rename to .ps1 to enable
+
+.NOTES
+    Part of LINKSAFE Patch Management
+#>
+
+$DrainTimeout = 30  # seconds
+
+Write-Host "Draining connections (timeout: ${DrainTimeout}s)..."
+
+# Example: Remove from load balancer
+# Invoke-RestMethod -Method POST -Uri "http://lb.example.com/api/drain/$env:COMPUTERNAME"
+
+# Example: Stop accepting new connections
+# netsh advfirewall firewall add rule name="BlockInbound" dir=in action=block
+
+Start-Sleep -Seconds $DrainTimeout
+
+Write-Host "Connection drain complete"
+exit 0

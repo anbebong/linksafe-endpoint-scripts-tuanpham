@@ -1,0 +1,41 @@
+MasterServers=0.0.0.0/0
+ServerConnection=192.168.100.244
+ConfigIncludeDir =C:\Program Files (x86)\LancsITIM\etc\lnagentd.conf.d
+LogFile = C:\Program Files (x86)\LancsITIM\log\lnagentd.log
+FileStore = C:\Program Files (x86)\LancsITIM\var
+SubAgent = ping.nsm
+# SubAgent = ssh.nsm
+SubAgent = winperf.nsm
+SubAgent = wmi.nsm
+
+Action=logout: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Logout.ps1
+
+Action=check-updates: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Check-Updates.ps1 -WingetOnly
+
+Action=list-installed: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Get-InstalledKB.ps1
+
+Action=check-reboot: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Check-Reboot.ps1
+
+Action=install-update: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Install-Updates.ps1 -WingetPackages "$1"
+
+Action=get-certs: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Get-Certs.ps1
+
+Action=install-security: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Install-SecurityUpdates.ps1
+
+Action=install-certs:/opt/linksafe-patch/actions/update-certs.sh "$1" "$2"
+
+Action=sync-hosts:/opt/linksafe-patch/actions/sync-hosts.sh
+
+#Action=rollback:/opt/linksafe-patch/actions/rollback.sh --package "$1" "$2"
+
+Action=setup-proxy: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Setup-Proxy.ps1 "$1"
+
+Action=firewall-drop: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Firewall-Rules.ps1
+
+Action=setup-dns: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Setup-DNS.ps1 "$1"
+
+Action=scan-av: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Scan-AV.ps1
+Action=scan-av-history: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Scan-AV.ps1 -History
+Action=scan-av-custom: powershell -ExecutionPolicy Bypass -File C:\Users\an\Desktop\linksafe-endpoint-scripts\windows\actions\Scan-AV.ps1 -Path "$1"
+
+ExternalCommandTimeout=50000

@@ -1,0 +1,48 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    Post-upgrade hook: Send update report
+
+.DESCRIPTION
+    Sends update completion report to logging system
+    Rename to .ps1 to enable
+
+.NOTES
+    Part of LINKSAFE Patch Management
+#>
+
+# Configuration
+$WebhookUrl = ""  # Set your webhook URL
+$LogPath = "C:\ProgramData\linksafe-patch\reports"
+
+# Create report directory
+if (-not (Test-Path $LogPath)) {
+    New-Item -ItemType Directory -Path $LogPath -Force | Out-Null
+}
+
+# Generate report
+$report = @{
+    hostname = $env:COMPUTERNAME
+    timestamp = (Get-Date -Format "yyyy-MM-ddTHH:mm:ssZ")
+    event = "update_completed"
+    os = (Get-WmiObject Win32_OperatingSystem).Caption
+}
+
+$reportJson = $report | ConvertTo-Json -Depth 5
+
+# Save to file
+$reportFile = Join-Path $LogPath "report_$(Get-Date -Format 'yyyyMMdd_HHmmss').json"
+$reportJson | Out-File -FilePath $reportFile -Encoding UTF8
+Write-Host "Report saved to: $reportFile"
+
+# Send to webhook if configured
+if ($WebhookUrl) {
+    try {
+        Invoke-RestMethod -Method POST -Uri $WebhookUrl -Body $reportJson -ContentType "application/json"
+        Write-Host "Report sent to webhook"
+    } catch {
+        Write-Warning "Failed to send report to webhook: $_"
+    }
+}
+
+exit 0

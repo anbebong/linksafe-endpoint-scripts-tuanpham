@@ -1,0 +1,249 @@
+{
+    "threats": [
+        {
+            "initial_detection_time": "2025-06-04T10:59:04Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 106,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-06-09T08:18:51Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 9,
+            "detection_id": "{DDA4D9AE-28D6-4E1B-9855-35821E03EFFB}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-06-09T08:18:51Z"
+        },
+        {
+            "initial_detection_time": "2025-06-04T10:59:04Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 6,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-06-09T11:58:16Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "",
+            "action_success": true,
+            "cleaning_action_id": 10,
+            "detection_id": "{7676FF27-D141-4369-8144-741A99E5BFAB}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-06-09T11:58:16Z"
+        },
+        {
+            "initial_detection_time": "2025-07-15T08:48:50Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 106,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-07-15T08:51:48Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 9,
+            "detection_id": "{8367041E-6BD9-45D2-9B56-14D73C2ADD39}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-07-15T08:51:48Z"
+        },
+        {
+            "initial_detection_time": "2025-07-10T15:33:59Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 6,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-07-10T15:35:01Z",
+            "threat_status_error_code": 0,
+            "threat_id": 403795,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 10,
+            "detection_id": "{C1E9A06B-997E-4BE3-B6A5-3186C5062010}",
+            "resources": [
+                "file:_E:\\CheatEngine75.exe",
+                "webfile:_E:\\CheatEngine75.exe|https://du0wcodktyky8.cloudfront.net/installer/157318183735783/318078|pid:14652,ProcessStart:133966100359452891"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-07-10T15:35:01Z"
+        },
+        {
+            "initial_detection_time": "2025-03-24T09:29:17Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 6,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-03-24T09:30:10Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 10,
+            "detection_id": "{E55BEF20-5BF6-4F84-B76B-FADFB12F9311}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-03-24T09:30:10Z"
+        },
+        {
+            "initial_detection_time": "2025-12-26T15:55:32Z",
+            "process_name": "E:\\git-hub\\appci\\lancsmaster.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 3,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-12-26T15:55:50Z",
+            "threat_status_error_code": 0,
+            "threat_id": 2147850771,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 2,
+            "detection_id": "{D8B820A5-7F88-429F-9B6F-FB7E96DFD825}",
+            "resources": [
+                "file:_E:\\git-hub\\appci\\external\\go-service\\lancs-master.dll"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-12-26T15:55:50Z"
+        },
+        {
+            "initial_detection_time": "2025-07-15T08:46:51Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 4,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-07-15T08:50:11Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 3,
+            "detection_id": "{F5DE5AF0-08DB-4B35-931B-EFE4ABB5AF3B}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 8,
+            "last_threat_status_change_time": "2025-07-15T08:50:11Z"
+        },
+        {
+            "initial_detection_time": "2025-12-26T15:55:27Z",
+            "process_name": "E:\\git-hub\\appci\\lancsmaster.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 3,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-12-26T15:55:50Z",
+            "threat_status_error_code": 0,
+            "threat_id": 2147850771,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 2,
+            "detection_id": "{28D881DD-A171-4AF8-8E4C-1647F0F096A2}",
+            "resources": [
+                "file:_E:\\git-hub\\appci\\external\\go-service\\lancs-master.dll"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-12-26T15:55:50Z"
+        },
+        {
+            "initial_detection_time": "2025-01-18T15:47:56Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 106,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-01-20T11:40:44Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 9,
+            "detection_id": "{DB784E1A-963E-4CA5-9485-307FF5AA9535}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-01-20T11:40:44Z"
+        },
+        {
+            "initial_detection_time": "2025-04-02T14:59:59Z",
+            "process_name": "C:\\Windows\\explorer.exe",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 106,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-04-02T19:36:13Z",
+            "threat_status_error_code": 0,
+            "threat_id": 365468,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 9,
+            "detection_id": "{19CD8860-5EED-4094-B157-FCD71E0F9F10}",
+            "resources": [
+                "file:_E:\\AppInstall\\CheatEngine75.exe"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-04-02T19:36:13Z"
+        },
+        {
+            "initial_detection_time": "2025-07-10T15:23:09Z",
+            "process_name": "C:\\Windows\\System32\\AggregatorHost.exe",
+            "detection_source_type_id": 4,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 4,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-07-10T16:02:36Z",
+            "threat_status_error_code": 0,
+            "threat_id": 311999,
+            "domain_user": "PC-AN\\DELL",
+            "action_success": true,
+            "cleaning_action_id": 3,
+            "detection_id": "{EF1CD37D-0E84-47D5-AE44-E21AE5F4E891}",
+            "resources": [
+                "file:_E:\\CheatEngine76.exe",
+                "webfile:_E:\\CheatEngine76.exe|https://du0wcodktyky8.cloudfront.net/installer/4714554326690/04189365|pid:4024,ProcessStart:133966093851502042"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-07-10T16:02:36Z"
+        },
+        {
+            "initial_detection_time": "2025-12-26T15:54:07Z",
+            "process_name": "Unknown",
+            "detection_source_type_id": 3,
+            "current_threat_execution_status_id": 1,
+            "threat_status_id": 4,
+            "am_product_version": "4.18.25110.6",
+            "remediation_time": "2025-12-26T15:54:12Z",
+            "threat_status_error_code": 0,
+            "threat_id": 2147850771,
+            "domain_user": "",
+            "action_success": true,
+            "cleaning_action_id": 3,
+            "detection_id": "{4D825F78-E9C4-4061-933B-743C0A9A2FE9}",
+            "resources": [
+                "file:_E:\\git-hub\\appci\\external\\go-service\\lancs-master.upx"
+            ],
+            "additional_actions_bitmask": 0,
+            "last_threat_status_change_time": "2025-12-26T15:54:12Z"
+        }
+    ],
+    "timestamp": "2026-01-06T10:55:14Z",
+    "total_threats": 12,
+    "hostname": "PC-AN"
+}

@@ -1,0 +1,27 @@
+#Requires -Version 5.1
+<#
+.SYNOPSIS
+    Pre-upgrade hook: Stop services before update
+
+.DESCRIPTION
+    Stops configured services before installing updates
+    Rename to .ps1 to enable
+
+.NOTES
+    Part of LINKSAFE Patch Management
+#>
+
+# Services to stop before updates (customize as needed)
+$ServicesToStop = @(
+    # "YourServiceName"
+)
+
+foreach ($service in $ServicesToStop) {
+    $svc = Get-Service -Name $service -ErrorAction SilentlyContinue
+    if ($svc -and $svc.Status -eq 'Running') {
+        Write-Host "Stopping service: $service"
+        Stop-Service -Name $service -Force -ErrorAction Stop
+    }
+}
+
+exit 0

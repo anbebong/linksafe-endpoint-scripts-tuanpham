@@ -1,0 +1,52 @@
+# Log File
+LogFile=/var/log/lnagentd.log
+# IP white list, can contain multiple records separated by comma.
+# CIDR notation supported for subnets.
+MasterServers=0.0.0.0/0
+# Agent connect to server [IP:Port]
+ServerConnection=192.168.100.244
+#Port=4703
+
+RequireEncryption=no
+RequireAuthentication=no
+EncryptedSharedSecret=Lancs@2024
+EnableProxy=yes
+
+Action=check-updates:/usr/local/bin/linksafe-check-updates
+
+Action=list-installed:/usr/local/bin/linksafe-list-installed
+
+Action=check-reboot:/usr/local/bin/linksafe-check-reboot
+
+Action=install-update:/usr/local/bin/linksafe-install-updates --packages "$1"
+
+Action=get-certs:/opt/linksafe-patch/actions/get-certs.sh
+
+Action=install-security:/opt/linksafe-patch/actions/install-security.sh
+
+Action=install-certs:/opt/linksafe-patch/actions/update-certs.sh "$1" "$2"
+
+Action=sync-hosts:/opt/linksafe-patch/actions/sync-hosts.sh
+
+Action=rollback:/opt/linksafe-patch/actions/rollback.sh --package "$1" "$2"
+
+Action=setup-proxy:/opt/linksafe-patch/actions/setup-proxy.sh "$1"
+
+Action=firewall-drop:/opt/linksafe-patch/actions/firewall-rules.sh
+
+Action=netstat:/usr/bin/netstat -plaunt
+Action=logout:/usr/bin/loginctl lock-sessions
+
+ExternalCommandTimeout=50000
+
+#ExternalMetricProvider=/usr/local/bin/vmhost_vm_list.sh:30
+#ExternalList=Custom.VMHostVMList:cat /tmp/Custom.VMHostVMList
+#SubAgent=vmgr.nsm
+
+#[vmgr]
+#host=default
+
+#[vmgr:default]
+#Url=test:///default
+#Login=
+#Password=
