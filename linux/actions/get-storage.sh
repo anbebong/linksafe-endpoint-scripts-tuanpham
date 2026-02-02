@@ -14,46 +14,45 @@ hostname=$(get_hostname)
 timestamp=$(get_timestamp)
 
 # Lấy thông tin block devices từ lsblk
-lsblk_output=$(lsblk -J 2>/dev/null || echo "{}")
+lsblk_output=$(lsblk -n -o NAME,MODEL,SIZE,SERIAL,ROTA,TYPE 2>/dev/null || echo "")
 
 # Lấy thông tin filesystem usage từ df
 df_output=$(df -h 2>/dev/null | grep -E "^/dev/" || echo "")
 
-# Parse physical disks từ lsblk JSON
+# Parse physical disks từ lsblk
 physical_disks="[]"
-logical_disks="[]"
-
-if [ "$lsblk_output" != "{}" ] && [ -n "$lsblk_output" ]; then
-    # Extract physical disks (type: disk)
-    physical_disks=$(echo "$lsblk_output" | jq -c '[.blockdevices[] | select(.type == "disk") | {name: .name, model: .model, size: .size, serial: .serial, rota: .rota, type: .type}]' 2>/dev/null || echo "[]")
-
-    # Extract logical disks (mountpoints)
-    logical_disks=$(echo "$lsblk_output" | jq -c '[.blockdevices[] | select(.mountpoints != null) | .mountpoints[] as $mp | {device: .name, mountpoint: $mp, fstype: .fstype, size: .size, used: .used, avail: .avail}]' 2>/dev/null || echo "[]")
+if [ -n "$lsblk_output" ]; then
+    physical_disks="["$(
+        echo "$lsblk_output" | awk '
+        $6 == "disk" {
+            name = $1
+            model = $2
+            size = $3
+            serial = $4
+            rota = $5
+            type = $6
+            printf "{\"name\":\"%s\",\"model\":\"%s\",\"size\":\"%s\",\"serial\":\"%s\",\"rota\":\"%s\",\"type\":\"%s\"},", name, model, size, serial, rota, type
+        }
+        ' | sed 's/,$//'
+    )"]"
 fi
 
-# Fallback: parse df output if lsblk fails
-if [ "$logical_disks" = "[]" ] && [ -n "$df_output" ]; then
-    logical_disks="["
-    first=true
-
-    echo "$df_output" | while read -r line; do
-        filesystem=$(echo "$line" | awk '{print $1}')
-        size=$(echo "$line" | awk '{print $2}')
-        used=$(echo "$line" | awk '{print $3}')
-        avail=$(echo "$line" | awk '{print $4}')
-        use_percent=$(echo "$line" | awk '{print $5}')
-        mountpoint=$(echo "$line" | awk '{print $6}')
-
-        if [ "$first" = true ]; then
-            first=false
-        else
-            logical_disks="${logical_disks},"
-        fi
-
-        logical_disks="${logical_disks}{\"device\":\"${filesystem}\",\"mountpoint\":\"${mountpoint}\",\"size\":\"${size}\",\"used\":\"${used}\",\"avail\":\"${avail}\",\"use_percent\":\"${use_percent}\"}"
-    done
-
-    logical_disks="${logical_disks}]"
+# Parse logical disks từ df
+logical_disks="[]"
+if [ -n "$df_output" ]; then
+    logical_disks="["$(
+        echo "$df_output" | awk '
+        {
+            device = $1
+            size = $2
+            used = $3
+            avail = $4
+            use_percent = $5
+            mountpoint = $6
+            printf "{\"device\":\"%s\",\"mountpoint\":\"%s\",\"size\":\"%s\",\"used\":\"%s\",\"avail\":\"%s\",\"use_percent\":\"%s\"},", device, mountpoint, size, used, avail, use_percent
+        }
+        ' | sed 's/,$//'
+    )"]"
 fi
 
 # Tạo JSON kết quả minified

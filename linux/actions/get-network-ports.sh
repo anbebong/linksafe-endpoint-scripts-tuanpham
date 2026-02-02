@@ -23,43 +23,28 @@ if [ -n "$ss_output" ]; then
     network_ports="["
     first=true
     
-    echo "$ss_output" | while IFS= read -r line; do
-        # Skip header line
-        if [[ $line == State* ]] || [[ $line == *Local* ]]; then
-            continue
+    while IFS= read -r entry; do
+        if [ "$first" = true ]; then
+            first=false
+        else
+            network_ports="${network_ports},"
         fi
-        
-        # Parse line: State Recv-Q Send-Q Local Address:Port Peer Address:Port Process
-        if [[ $line =~ ^LISTEN ]]; then
-            # Extract protocol, local address and port
-            protocol=""
-            local_addr=""
-            local_port=""
-            
-            # Check if TCP or UDP
-            if [[ $line == tcp* ]]; then
-                protocol="TCP"
-            elif [[ $line == udp* ]]; then
-                protocol="UDP"
-            fi
-            
-            # Extract local address:port
-            if [[ $line =~ ([0-9a-fA-F:.]+):([0-9]+) ]]; then
-                local_addr="${BASH_REMATCH[1]}"
-                local_port="${BASH_REMATCH[2]}"
-            fi
-            
-            if [ -n "$protocol" ] && [ -n "$local_port" ]; then
-                if [ "$first" = true ]; then
-                    first=false
-                else
-                    network_ports="${network_ports},"
-                fi
-                
-                network_ports="${network_ports}{\"protocol\":\"${protocol}\",\"local_address\":\"${local_addr}\",\"local_port\":${local_port},\"state\":\"LISTENING\"}"
-            fi
-        fi
-    done
+        network_ports="${network_ports}${entry}"
+    done < <(echo "$ss_output" | awk '
+    NR > 1 && $2 == "LISTEN" {
+        protocol = toupper($1)
+        split($5, addr_port, ":")
+        local_addr = addr_port[1]
+        for (i=2; i<length(addr_port); i++) {
+            if (i > 2) local_addr = local_addr ":"
+            local_addr = local_addr addr_port[i]
+        }
+        local_port = addr_port[length(addr_port)]
+        if (protocol && local_port) {
+            printf "{\"protocol\":\"%s\",\"local_address\":\"%s\",\"local_port\":%d,\"state\":\"LISTENING\"}\n", protocol, local_addr, local_port
+        }
+    }
+    ')
     
     network_ports="${network_ports}]"
 fi

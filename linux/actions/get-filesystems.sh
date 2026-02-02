@@ -24,7 +24,7 @@ if [ -n "$filesystem_output" ]; then
     filesystems="["
     first=true
 
-    echo "$filesystem_output" | tail -n +2 | while IFS= read -r line; do
+    while IFS= read -r line; do
         # Parse df output: Filesystem Type Size Used Avail Use% Mounted
         if [[ $line =~ ^([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+([^[:space:]]+)[[:space:]]+(.+)$ ]]; then
             device="${BASH_REMATCH[1]}"
@@ -43,23 +43,13 @@ if [ -n "$filesystem_output" ]; then
 
             filesystems="${filesystems}{\"device_id\":\"${device}\",\"filesystem\":\"${fstype}\",\"size\":\"${size}\",\"free_space\":\"${avail}\",\"mount_point\":\"${mount}\",\"used\":\"${used}\",\"use_percent\":\"${usep}\"}"
         fi
-    done
+    done <<< "$(echo "$filesystem_output" | tail -n +2)"
 
     filesystems="${filesystems}]"
 fi
 
-# Tạo JSON kết quả
-result=$(cat <<EOF
-{
-  "status": "success",
-  "data": {
-    "hostname": "${hostname}",
-    "timestamp": "${timestamp}",
-    "filesystems": ${filesystems}
-  }
-}
-EOF
-)
+# Tạo JSON kết quả minified
+result="{\"status\":\"success\",\"data\":{\"hostname\":\"${hostname}\",\"timestamp\":\"${timestamp}\",\"filesystems\":${filesystems}}}"
 
 # Xuất JSON kết quả
 echo "$result"

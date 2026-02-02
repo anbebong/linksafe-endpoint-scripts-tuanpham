@@ -13,38 +13,39 @@ source "${BASE_DIR}/lib/common.sh"
 hostname=$(get_hostname)
 timestamp=$(get_timestamp)
 
-# Lấy thông tin VGA devices từ lspci
-vga_output=$(lspci | grep VGA 2>/dev/null || echo "")
+# Lấy thông tin VGA devices từ lshw
+lshw_output=$(lshw -class display 2>/dev/null || echo "")
 
 # Lấy thông tin display từ xrandr (nếu có X server)
-xrandr_output=$(xrandr 2>/dev/null | grep -E " connected|*" | head -10 || echo "")
+if [ -n "${DISPLAY:-}" ]; then
+    xrandr_output=$(xrandr 2>/dev/null | grep -E " connected|*" | head -10 || echo "")
+else
+    xrandr_output=""
+fi
 
 # Lấy thông tin OpenGL từ glxinfo (nếu có)
-glxinfo_output=$(glxinfo 2>/dev/null | grep -E "OpenGL|GLX" | head -10 || echo "")
+if [ -n "${DISPLAY:-}" ]; then
+    glxinfo_output=$(glxinfo 2>/dev/null | grep -E "OpenGL|GLX" | head -10 || echo "")
+else
+    glxinfo_output=""
+fi
 
 # Parse video controllers
 video_controllers="[]"
-if [ -n "$vga_output" ]; then
-    video_controllers="["
-    first=true
-
-    echo "$vga_output" | while IFS= read -r line; do
-        if [ -n "$line" ]; then
-            # Parse lspci VGA line: "00:02.0 VGA compatible controller: Intel Corporation UHD Graphics 620 (rev 07)"
-            bus_id=$(echo "$line" | cut -d' ' -f1)
-            device_info=$(echo "$line" | cut -d':' -f3- | sed 's/^ *//')
-
-            if [ "$first" = true ]; then
-                first=false
-            else
-                video_controllers="${video_controllers},"
-            fi
-
-            video_controllers="${video_controllers}{\"bus_id\":\"${bus_id}\",\"device_info\":\"${device_info}\",\"type\":\"VGA\"}"
-        fi
-    done
-
-    video_controllers="${video_controllers}]"
+if [ -n "$lshw_output" ]; then
+    video_controllers="["$(
+        echo "$lshw_output" | grep -E "product:|vendor:|description:" | paste - - - | awk -F'\t' '
+        {
+            desc_line = $1
+            prod_line = $2
+            vend_line = $3
+            sub(/.*description: /, "", desc_line)
+            sub(/.*product: /, "", prod_line)
+            sub(/.*vendor: /, "", vend_line)
+            printf "{\"product\":\"%s\",\"vendor\":\"%s\",\"description\":\"%s\"},", prod_line, vend_line, desc_line
+        }
+        ' | sed 's/,$//'
+    )"]"
 fi
 
 # Parse display information

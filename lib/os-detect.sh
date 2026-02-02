@@ -256,7 +256,7 @@ detect_os() {
         return 1
     fi
 
-    log_info "Detected: ${OS_PRETTY_NAME} with ${PACKAGE_MANAGER}"
+    # log_info "Detected: ${OS_PRETTY_NAME} with ${PACKAGE_MANAGER}"
     return 0
 }
 

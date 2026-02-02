@@ -22,7 +22,7 @@ if [ -n "$env_output" ]; then
     environment_variables="["
     first=true
 
-    echo "$env_output" | while IFS='=' read -r name value; do
+    while IFS='=' read -r name value; do
         if [ -n "$name" ]; then
             # Escape special characters in value
             value_escaped=$(echo "$value" | sed 's/\\/\\\\/g; s/"/\\"/g')
@@ -35,7 +35,7 @@ if [ -n "$env_output" ]; then
 
             environment_variables="${environment_variables}{\"name\":\"${name}\",\"value\":\"${value_escaped}\"}"
         fi
-    done
+    done <<< "$env_output"
 
     environment_variables="${environment_variables}]"
 fi

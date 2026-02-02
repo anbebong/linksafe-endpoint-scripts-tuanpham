@@ -1,0 +1,37 @@
+{
+    "status": "success",
+    "data": {
+        "hostname": "an-vmw-server",
+        "timestamp": "2026-02-02T03:43:02Z",
+        "ram": {
+            "modules": [
+                {
+                    "bank_label": "",
+                    "capacity_gb": 2.00,
+                    "manufacturer": "",
+                    "part_number": "",
+                    "speed_mhz": 0,
+                    "memory_type": "",
+                    "form_factor": "",
+                    "serial_number": ""
+                },
+                {
+                    "bank_label": "",
+                    "capacity_gb": 1.00,
+                    "manufacturer": "",
+                    "part_number": "",
+                    "speed_mhz": 0,
+                    "memory_type": "",
+                    "form_factor": "",
+                    "serial_number": ""
+                }
+            ],
+            "usage": {
+                "total_physical_memory_gb": 2.86,
+                "free_physical_memory_gb": 0.22,
+                "used_physical_memory_gb": 1.66,
+                "memory_usage_percent": 58.14
+            }
+        }
+    }
+}
